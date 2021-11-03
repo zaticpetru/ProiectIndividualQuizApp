@@ -1,1 +1,1 @@
-# ProiectIndividualQuizApp
+# QuizApp
