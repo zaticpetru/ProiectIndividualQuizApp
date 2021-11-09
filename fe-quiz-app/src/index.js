@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { stopReportingRuntimeErrors  } from 'react-error-overlay'
+
+// * Disable error overlay
+stopReportingRuntimeErrors();
+
 
 ReactDOM.render(
   <React.StrictMode>
