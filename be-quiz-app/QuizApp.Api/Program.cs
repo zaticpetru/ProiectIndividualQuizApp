@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using QuizApp.Core;
+using QuizApp.Core.Servicies;
 using QuizApp.Data;
-
+using QuizApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+
+// Dependecy injection
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IMusicService, MusicService>();
+builder.Services.AddTransient<IArtistService, ArtistService>();
+
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 
