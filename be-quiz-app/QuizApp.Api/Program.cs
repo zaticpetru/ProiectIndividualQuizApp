@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QuizApp.Api.Settings;
 using QuizApp.Core;
 using QuizApp.Core.Models.Auth;
 using QuizApp.Core.Servicies;
@@ -48,6 +49,7 @@ builder.Services.AddIdentity<User, Role>()
 //    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1d);
 //    options.Lockout.MaxFailedAccessAttempts = 5;
 //})
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
 var app = builder.Build();
 
