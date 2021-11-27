@@ -24,6 +24,7 @@ builder.Services.AddTransient<IArtistService, ArtistService>();
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 
+// DB context
 builder.Services.AddDbContext<QuizAppDbContext>(options =>
     options.UseSqlServer(connectionString, x => x.MigrationsAssembly("QuizApp.Data"))
     );
@@ -36,6 +37,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// For better error pages
+app.UseDeveloperExceptionPage();
 
 app.UseHttpsRedirection();
 

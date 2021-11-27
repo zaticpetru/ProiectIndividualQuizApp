@@ -27,7 +27,7 @@ namespace QuizApp.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<IEnumerable<Artist>> GetAllArtistis()
+        public async Task<IEnumerable<Artist>> GetAllArtists()
         {
             return await _unitOfWork.Artists.GetAllAsync();
         }
