@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QuizApp.Api.Extensions;
 using QuizApp.Api.Settings;
 using QuizApp.Core;
 using QuizApp.Core.Models.Auth;
 using QuizApp.Core.Servicies;
 using QuizApp.Data;
 using QuizApp.Services;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,33 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT containing userid claim",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    var security =
+        new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Id = "Bearer",
+                        Type = ReferenceType.SecurityScheme
+                    },
+                    UnresolvedReference = true
+                },
+                new List<string>()
+            }
+        };
+});
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
@@ -49,7 +77,11 @@ builder.Services.AddIdentity<User, Role>()
 //    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1d);
 //    options.Lockout.MaxFailedAccessAttempts = 5;
 //})
+
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
+
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+builder.Services.AddAuth(jwtSettings);
 
 var app = builder.Build();
 
@@ -62,6 +94,8 @@ if (app.Environment.IsDevelopment())
 
 // For better error pages
 app.UseDeveloperExceptionPage();
+
+app.UseAuth();
 
 app.UseHttpsRedirection();
 

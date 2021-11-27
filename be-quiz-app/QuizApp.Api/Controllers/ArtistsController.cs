@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizApp.Api.Resources;
 using QuizApp.Api.Validators;
@@ -9,6 +10,7 @@ namespace QuizApp.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ArtistsController : ControllerBase
     {
         private readonly IArtistService _artistService;
@@ -30,6 +32,7 @@ namespace QuizApp.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<ArtistDTO>> GetArtistById(int id)
         {
             var artist = await _artistService.GetArtistById(id);
