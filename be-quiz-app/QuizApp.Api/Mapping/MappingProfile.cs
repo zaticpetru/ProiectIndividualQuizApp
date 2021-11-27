@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using QuizApp.Api.Resources;
 using QuizApp.Core.Models;
+using QuizApp.Core.Models.Auth;
 
 namespace QuizApp.Api.Mapping
 {
@@ -19,6 +20,8 @@ namespace QuizApp.Api.Mapping
             CreateMap<SaveMusicDTO, Music>();
             CreateMap<SaveArtistDTO, Artist>();
 
+            CreateMap<UserSignUpDTO, User>()
+                .ForMember(u => u.UserName, opt => opt.MapFrom(ud => ud.Email));
         }
     }
 }

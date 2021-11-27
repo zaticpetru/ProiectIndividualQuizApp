@@ -1,15 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using QuizApp.Core.Models;
+using QuizApp.Core.Models.Auth;
 using QuizApp.Data.Configurations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizApp.Data
 {
-    public class QuizAppDbContext : DbContext
+    public class QuizAppDbContext : IdentityDbContext<User, Role, Guid>
     {
         public DbSet<Music> Musics { get; set; }
         public DbSet<Artist> Artists { get; set; }
@@ -20,6 +17,7 @@ namespace QuizApp.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
             builder.ApplyConfiguration(new MusicConfiguration());
             builder.ApplyConfiguration(new ArtistConfiguration());
         }

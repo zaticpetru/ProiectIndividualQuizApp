@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuizApp.Core;
+using QuizApp.Core.Models.Auth;
 using QuizApp.Core.Servicies;
 using QuizApp.Data;
 using QuizApp.Services;
@@ -21,13 +23,31 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IMusicService, MusicService>();
 builder.Services.AddTransient<IArtistService, ArtistService>();
 
-
 var connectionString = builder.Configuration.GetConnectionString("Default");
 
 // DB context
 builder.Services.AddDbContext<QuizAppDbContext>(options =>
     options.UseSqlServer(connectionString, x => x.MigrationsAssembly("QuizApp.Data"))
     );
+
+// Identity
+// AddIdentity takes the two implementations of IdentityUser and IdentityRole.
+builder.Services.AddIdentity<User, Role>()
+    // AddEntityFrameworkStores tells that our QuizAppDbContext
+    // is going to be where our Identity’s information is stored
+    .AddEntityFrameworkStores<QuizAppDbContext>()
+    //AddDefaultTokenProviders just adds the default providers to generate tokens for
+    //a password reset, 2-factor authentication, change email, and change telephone
+    .AddDefaultTokenProviders();
+
+//AddIdentity<User, Role>(options =>
+//{
+//    options.Password.RequiredLength = 8;
+//    options.Password.RequireNonAlphanumeric = true;
+//    options.Password.RequireUppercase = true;
+//    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1d);
+//    options.Lockout.MaxFailedAccessAttempts = 5;
+//})
 
 var app = builder.Build();
 
