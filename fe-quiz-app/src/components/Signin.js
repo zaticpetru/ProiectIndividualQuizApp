@@ -1,6 +1,7 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import AuthContext from '../context/authContext/AuthContext';
+import api from '../services/api';
 
 
 const Signin = () => {
@@ -10,12 +11,39 @@ const Signin = () => {
     const {user, dispatch} = useContext(AuthContext);
 
     const sendSignUpData = (values) => {
+
+        const userInfo = {
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+            password: values.password,
+        }
+
+        api.post('/Auth/signup', userInfo)
+          .then(function (response) {
+            setIsSignUpForm(false)
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
+
+    const sendSignInData = (values) => {
         const userInfo = {
             email: values.email,
             password: values.password,
         }
-        dispatch({type: 'SET_USER_INFO', payload: userInfo })
+        api.post('/Auth/signin', userInfo)
+          .then(function (response) {
+            dispatch({type: 'SET_USER_INFO', payload: response.data })
+
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     }
+
+
 
     const linkToForm = isSignUpForm ? 
     ( <button 
@@ -74,7 +102,9 @@ const Signin = () => {
                         return errors;
                     }}
                     onSubmit={(values, { setSubmitting }) => {
-                        sendSignUpData(values)
+                        isSignUpForm ? 
+                        sendSignUpData(values) :
+                        sendSignInData(values)
                     }}
                 >
                     {({ isSubmitting }) => (

@@ -8,7 +8,6 @@ const updateStateObject = (oldObject, updatedProprieties) => {
 };
 
 const setUserInfo = ( state, action ) => {
-    console.log(action.payload)
     return updateStateObject( state, {
         user: action.payload
     } );
